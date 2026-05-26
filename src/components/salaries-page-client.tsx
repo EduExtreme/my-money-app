@@ -6,7 +6,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { MonthFilter } from "@/components/query-filters";
 import { CreateSalaryForm, SalaryRowActions } from "@/components/salary-row-actions";
 import { DatabaseBanner, EmptyState, MetricCard, SectionHeader } from "@/components/ui";
-import { getCurrentMonth, getMonthLabel } from "@/lib/dates";
+import { formatMonthInput, getCurrentMonth, getMonthLabel } from "@/lib/dates";
 import { useFinanceDataQuery } from "@/lib/finance-query";
 import type { FinanceData } from "@/lib/finance-types";
 import { formatCurrency } from "@/lib/money";
@@ -84,7 +84,7 @@ export function SalariesPageClient({
                       <td className="px-4 py-3">
                         <div className="inline-flex items-center gap-2 text-[#c8d5cc]">
                           <CalendarDays className="size-4 text-[#39ff14]" />
-                          {salary.startMonth} ate {salary.endMonth ?? "indefinido"}
+                          {formatMonthInput(salary.startMonth)} ate {salary.endMonth ? formatMonthInput(salary.endMonth) : "indefinido"}
                         </div>
                       </td>
                       <td className="px-4 py-3">

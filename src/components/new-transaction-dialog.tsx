@@ -2,14 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Dialog } from "@base-ui/react/dialog";
 import { PlusCircle, X } from "lucide-react";
-import { useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { createTransaction } from "@/app/actions";
 import { AppButton } from "@/components/app-button";
-import { FormInput, FormSelect } from "@/components/form-fields";
+import { FormDatePicker, FormInput, FormSelect } from "@/components/form-fields";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { getCurrentDateInput } from "@/lib/dates";
 import { objectToFormData } from "@/lib/form-data";
 import { getAccountTypeLabel, getTransactionTypeLabel, transactionStatuses, transactionTypes } from "@/lib/options";
@@ -37,7 +37,8 @@ export function NewTransactionDialog({
   label?: string;
 }) {
   const queryClient = useQueryClient();
-  const dialogActionsRef = useRef<Dialog.Root.Actions | null>(null);
+  // The shadcn dialog is controlled so server mutation success can close it programmatically.
+  const [open, setOpen] = useState(false);
   const formDataQuery = useQuery({
     queryKey: queryKeys.transactionFormData,
     queryFn: async () => {
@@ -67,7 +68,7 @@ export function NewTransactionDialog({
   const mutation = useMutation({
     mutationFn: (values: TransactionFormValues) => createTransaction(objectToFormData(values)),
     onSuccess: async () => {
-      dialogActionsRef.current?.close();
+      setOpen(false);
       form.reset();
       await invalidateFinanceQueries(queryClient);
     },
@@ -77,30 +78,26 @@ export function NewTransactionDialog({
     formDataQuery.isPending || !data || data.mode !== "database" || data.accounts.length === 0 || data.categories.length === 0;
 
   return (
-    <Dialog.Root actionsRef={dialogActionsRef}>
-      <Dialog.Trigger className={className}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger className={className}>
         <PlusCircle className="size-4" />
         {label}
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm" />
-        <Dialog.Viewport className="fixed inset-0 z-50 overflow-y-auto p-4">
-          <div className="flex min-h-full items-center justify-center">
-            <Dialog.Popup className="glass-panel w-full max-w-4xl rounded-[1.7rem] p-5 text-left text-[#eefbf1]">
+      </DialogTrigger>
+      <DialogContent showCloseButton={false} className="glass-panel max-h-[calc(100vh-2rem)] w-full max-w-4xl overflow-y-auto rounded-[1.7rem] p-5 text-left text-[#eefbf1] sm:max-w-4xl">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
-                  <Dialog.Title className="text-2xl font-semibold text-white">Nova transacao</Dialog.Title>
-                  <Dialog.Description className="mt-2 text-sm text-[#96a59b]">
+                  <DialogTitle className="text-2xl font-semibold text-white">Nova transacao</DialogTitle>
+                  <DialogDescription className="mt-2 text-sm text-[#96a59b]">
                     Cadastre entradas, saidas e compras parceladas sem sair da tela atual.
-                  </Dialog.Description>
+                  </DialogDescription>
                 </div>
-                <Dialog.Close
+                <DialogClose
                   aria-label="Fechar"
                   className="grid size-10 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-white transition hover:border-[#ff3131]/40 hover:text-[#ff7070]"
                   type="button"
                 >
                   <X className="size-5" />
-                </Dialog.Close>
+                </DialogClose>
               </div>
 
               {formDataQuery.isPending ? <p className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-[#c8d5cc]">Carregando contas e categorias...</p> : null}
@@ -127,7 +124,7 @@ export function NewTransactionDialog({
                 <div className="grid gap-4 md:grid-cols-3">
                   <FormInput form={form} name="amount" label="Valor total" inputMode="decimal" placeholder="1200,00" disabled={disabled} />
                   <FormInput form={form} name="installments" label="Parcelas" type="number" min={1} max={360} disabled={disabled} />
-                  <FormInput form={form} name="transactionDate" label="Data" type="date" disabled={disabled} />
+                  <FormDatePicker form={form} name="transactionDate" label="Data" disabled={disabled} />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
@@ -172,18 +169,15 @@ export function NewTransactionDialog({
                 {mutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{mutation.error.message}</p> : null}
 
                 <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-                  <Dialog.Close className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10" type="button">
+                  <DialogClose className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10" type="button">
                     Cancelar
-                  </Dialog.Close>
+                  </DialogClose>
                   <AppButton className="rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={disabled || mutation.isPending} type="submit">
                     Salvar transacao
                   </AppButton>
                 </div>
               </form>
-            </Dialog.Popup>
-          </div>
-        </Dialog.Viewport>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 }

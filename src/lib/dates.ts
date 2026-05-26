@@ -21,6 +21,14 @@ export function getShortMonthLabel(month: string) {
   return format(parseMonth(month), "LLL", { locale: ptBR });
 }
 
+export function formatDateInput(dateInput: string) {
+  return format(parseDateInput(dateInput), "dd/MM/yyyy", { locale: ptBR });
+}
+
+export function formatMonthInput(month: string) {
+  return format(parseMonth(month), "MM/yyyy", { locale: ptBR });
+}
+
 export function getYearMonths(year: number) {
   return Array.from({ length: 12 }, (_, index) => {
     return `${year}-${String(index + 1).padStart(2, "0")}`;
@@ -51,6 +59,16 @@ export function createDateInputFromMonthDay(month: string, day: number) {
   date.setDate(safeDay);
 
   return format(date, "yyyy-MM-dd");
+}
+
+export function parseDateInput(dateInput: string) {
+  const parsedDate = parse(dateInput, "yyyy-MM-dd", new Date());
+
+  return isValid(parsedDate) ? parsedDate : new Date();
+}
+
+export function parseMonthInput(month: string) {
+  return parseMonth(month);
 }
 
 function parseMonth(month: string) {

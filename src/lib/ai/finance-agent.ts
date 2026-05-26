@@ -5,7 +5,7 @@ import { generateText, stepCountIs, tool } from "ai";
 import { z } from "zod";
 
 import { getBasicFormData } from "@/lib/data";
-import { getCurrentDateInput } from "@/lib/dates";
+import { formatDateInput, getCurrentDateInput } from "@/lib/dates";
 import { formatCurrency } from "@/lib/money";
 import { whatsappTransactionPayloadSchema, type WhatsappTransactionPayload } from "@/lib/services/whatsapp-actions";
 
@@ -161,7 +161,7 @@ async function buildTransactionProposal(input: z.infer<typeof transactionProposa
     "",
     `${input.type === "expense" ? "Saida" : "Entrada"}: ${payload.description}`,
     `Valor: ${formatCurrency(input.amountCents)}`,
-    `Data: ${payload.transactionDate}`,
+    `Data: ${formatDateInput(payload.transactionDate)}`,
     `Conta: ${account.name}`,
     `Categoria: ${category.name}`,
     `Parcelas: ${payload.installments}`,

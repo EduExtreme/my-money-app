@@ -1,6 +1,6 @@
 import { getAccountTypeLabel, getStatusLabel, getTransactionTypeLabel } from "@/lib/options";
 import { formatCurrency } from "@/lib/money";
-import { getMonthLabel } from "@/lib/dates";
+import { formatDateInput, getMonthLabel } from "@/lib/dates";
 import type { TransactionWithMeta } from "@/lib/finance-types";
 import { TransactionRowActions, type TransactionActionOptions } from "./transaction-row-actions";
 
@@ -45,7 +45,7 @@ export function TransactionTable({
               <tr key={transaction.id} className="bg-white/[0.035] text-[#e9f6ec]">
                 <td className="rounded-l-2xl px-4 py-3">
                   <div className="font-medium text-white">{transaction.description}</div>
-                  <div className="text-xs text-[#96a59b]">{transaction.transactionDate}</div>
+                  <div className="text-xs text-[#96a59b]">{formatDateInput(transaction.transactionDate)}</div>
                 </td>
                 <td className="px-4 py-3">{getTransactionTypeLabel(transaction.type)}</td>
                 <td className="px-4 py-3">
