@@ -20,7 +20,7 @@ export function AccountForm({ disabled }: { disabled: boolean }) {
       name: "",
       type: "credit_card",
       institution: "",
-      color: "#39ff14",
+      color: "#10b981",
       creditLimit: "",
       closingDay: "",
       dueDay: "",
@@ -37,7 +37,7 @@ export function AccountForm({ disabled }: { disabled: boolean }) {
 
   return (
     <form className="mt-5 grid gap-4" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
-      <FormInput form={form} name="name" label="Nome" placeholder="Cartao principal" disabled={isDisabled} />
+      <FormInput form={form} name="name" label="Nome" placeholder="Cartão principal" disabled={isDisabled} />
       <FormSelect
         form={form}
         name="type"
@@ -45,7 +45,7 @@ export function AccountForm({ disabled }: { disabled: boolean }) {
         disabled={isDisabled}
         options={accountTypes.map((type) => ({ value: type.value, label: type.label }))}
       />
-      <FormInput form={form} name="institution" label="Instituicao" placeholder="Banco, carteira ou operadora" disabled={isDisabled} />
+      <FormInput form={form} name="institution" label="Instituição" placeholder="Banco, carteira ou operadora" disabled={isDisabled} />
       <div className="grid gap-4 sm:grid-cols-2">
         <FormInput form={form} name="color" label="Cor" type="color" disabled={isDisabled} />
         <FormInput form={form} name="creditLimit" label="Limite" placeholder="5000,00" disabled={isDisabled} />
@@ -55,7 +55,7 @@ export function AccountForm({ disabled }: { disabled: boolean }) {
         <FormInput form={form} name="dueDay" label="Vencimento" type="number" min={1} max={31} disabled={isDisabled} />
       </div>
       {mutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{mutation.error.message}</p> : null}
-      <AppButton className="inline-flex items-center justify-center rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={isDisabled} type="submit">
+      <AppButton className="inline-flex items-center justify-center rounded-2xl bg-[#10b981] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#059669] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={isDisabled} type="submit">
         Salvar conta
       </AppButton>
     </form>

@@ -7,7 +7,7 @@ export const currencyStringSchema = z
   .string()
   .trim()
   .min(1, "Informe um valor.")
-  .regex(/^R?\$?\s?\d{1,3}(\.\d{3})*(,\d{1,2})?$|^\d+(,\d{1,2})?$|^\d+(\.\d{1,2})?$/, "Informe um valor em BRL valido.");
+  .regex(/^R?\$?\s?\d{1,3}(\.\d{3})*(,\d{1,2})?$|^\d+(,\d{1,2})?$|^\d+(\.\d{1,2})?$/, "Informe um valor em BRL válido.");
 
 export const accountFormSchema = z.object({
   name: z.string().trim().min(2, "Informe um nome."),
@@ -15,8 +15,8 @@ export const accountFormSchema = z.object({
   institution: optionalText,
   color: z.string().trim().min(4, "Informe uma cor."),
   creditLimit: z.union([currencyStringSchema, z.literal("")]).optional(),
-  closingDay: optionalNumber.refine((value) => value === undefined || (value >= 1 && value <= 31), "Dia invalido."),
-  dueDay: optionalNumber.refine((value) => value === undefined || (value >= 1 && value <= 31), "Dia invalido."),
+  closingDay: optionalNumber.refine((value) => value === undefined || (value >= 1 && value <= 31), "Dia inválido."),
+  dueDay: optionalNumber.refine((value) => value === undefined || (value >= 1 && value <= 31), "Dia inválido."),
 });
 
 export const categoryFormSchema = z.object({
@@ -26,13 +26,13 @@ export const categoryFormSchema = z.object({
 });
 
 export const transactionFormSchema = z.object({
-  description: z.string().trim().min(2, "Informe uma descricao."),
+  description: z.string().trim().min(2, "Informe uma descrição."),
   type: z.enum(["income", "expense"]),
   amount: currencyStringSchema,
-  transactionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Informe uma data valida."),
+  transactionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Informe uma data válida."),
   accountId: z.coerce.number().int().positive("Selecione uma conta."),
   categoryId: z.coerce.number().int().positive("Selecione uma categoria."),
-  installments: z.coerce.number().int().min(1, "Minimo de 1 parcela.").max(360, "Maximo de 360 parcelas."),
+  installments: z.coerce.number().int().min(1, "Mínimo de 1 parcela.").max(360, "Máximo de 360 parcelas."),
   status: z.enum(["planned", "paid"]),
   notes: optionalText,
 });
@@ -47,13 +47,13 @@ export const futureExpenseFormSchema = transactionFormSchema.extend({
 });
 
 export const futureExpensePlannerFormSchema = z.object({
-  description: z.string().trim().min(2, "Informe uma descricao."),
+  description: z.string().trim().min(2, "Informe uma descrição."),
   amount: currencyStringSchema,
-  startMonth: z.string().regex(/^\d{4}-\d{2}$/, "Informe o mes inicial."),
-  day: z.coerce.number().int().min(1, "Dia invalido.").max(31, "Dia invalido."),
+  startMonth: z.string().regex(/^\d{4}-\d{2}$/, "Informe o mês inicial."),
+  day: z.coerce.number().int().min(1, "Dia inválido.").max(31, "Dia inválido."),
   accountId: z.coerce.number().int().positive("Selecione uma conta."),
   categoryId: z.coerce.number().int().positive("Selecione uma categoria."),
-  installments: z.coerce.number().int().min(1, "Minimo de 1 parcela.").max(360, "Maximo de 360 parcelas."),
+  installments: z.coerce.number().int().min(1, "Mínimo de 1 parcela.").max(360, "Máximo de 360 parcelas."),
   notes: optionalText,
 });
 
@@ -64,8 +64,8 @@ export const deleteTransactionGroupFormSchema = z.object({
 export const salaryFormSchema = z.object({
   name: z.string().trim().min(2, "Informe um nome."),
   amount: currencyStringSchema,
-  paymentDay: z.coerce.number().int().min(1, "Dia invalido.").max(31, "Dia invalido."),
-  startMonth: z.string().regex(/^\d{4}-\d{2}$/, "Informe o mes inicial."),
+  paymentDay: z.coerce.number().int().min(1, "Dia inválido.").max(31, "Dia inválido."),
+  startMonth: z.string().regex(/^\d{4}-\d{2}$/, "Informe o mês inicial."),
   endMonth: z.union([z.string().regex(/^\d{4}-\d{2}$/), z.literal("")]).optional(),
   accountId: z.coerce.number().int().positive("Selecione uma conta."),
   categoryId: z.coerce.number().int().positive("Selecione uma categoria."),
@@ -81,6 +81,15 @@ export const deleteSalaryFormSchema = z.object({
   salaryId: z.coerce.number().int().positive(),
 });
 
+export const loginFormSchema = z.object({
+  email: z.string().trim().email("Informe um e-mail válido."),
+  password: z.string().min(8, "Informe sua senha."),
+});
+
+export const signupFormSchema = loginFormSchema.extend({
+  name: z.string().trim().min(2, "Informe seu nome."),
+});
+
 export type AccountFormValues = z.input<typeof accountFormSchema>;
 export type CategoryFormValues = z.input<typeof categoryFormSchema>;
 export type TransactionFormValues = z.input<typeof transactionFormSchema>;
@@ -89,3 +98,11 @@ export type FutureExpenseFormValues = z.input<typeof futureExpenseFormSchema>;
 export type FutureExpensePlannerFormValues = z.input<typeof futureExpensePlannerFormSchema>;
 export type SalaryFormValues = z.input<typeof salaryFormSchema>;
 export type UpdateSalaryFormValues = z.input<typeof updateSalaryFormSchema>;
+export type LoginFormValues = z.input<typeof loginFormSchema>;
+export type SignupFormValues = z.input<typeof signupFormSchema>;
+
+export const inviteMemberFormSchema = z.object({
+  email: z.string().trim().email("Informe um e-mail válido."),
+});
+
+export type InviteMemberFormValues = z.input<typeof inviteMemberFormSchema>;

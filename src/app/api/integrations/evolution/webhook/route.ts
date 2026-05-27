@@ -7,6 +7,7 @@ import {
   confirmPendingWhatsappAction,
   createPendingWhatsappTransaction,
   getActivePendingWhatsappAction,
+  getWhatsappFamilyContext,
   isCancelMessage,
   isConfirmMessage,
   recordIncomingWhatsappMessage,
@@ -66,14 +67,14 @@ export async function POST(request: Request) {
 
   if (pendingAction && isConfirmMessage(message.text)) {
     await confirmPendingWhatsappAction(pendingAction);
-    await sendEvolutionTextMessage({ number: message.phone, text: "Lancamento registrado com sucesso." });
+    await sendEvolutionTextMessage({ number: message.phone, text: "Lançamento registrado com sucesso." });
 
     return NextResponse.json({ ok: true, confirmed: true });
   }
 
   if (pendingAction && isCancelMessage(message.text)) {
     await cancelPendingWhatsappAction(pendingAction);
-    await sendEvolutionTextMessage({ number: message.phone, text: "Lancamento cancelado." });
+    await sendEvolutionTextMessage({ number: message.phone, text: "Lançamento cancelado." });
 
     return NextResponse.json({ ok: true, cancelled: true });
   }
@@ -81,13 +82,20 @@ export async function POST(request: Request) {
   if (!pendingAction && (isConfirmMessage(message.text) || isCancelMessage(message.text))) {
     await sendEvolutionTextMessage({
       number: message.phone,
-      text: "Nao ha lancamento pendente para confirmar. Envie um gasto ou ganho primeiro.",
+      text: "Não há lançamento pendente para confirmar. Envie um gasto ou ganho primeiro.",
     });
 
     return NextResponse.json({ ok: true });
   }
 
-  const agentResult = await runFinanceWhatsappAgent({ text: message.text, phone: message.phone });
+  const family = await getWhatsappFamilyContext(message.phone);
+  if (!family.hasPremiumAccess) {
+    await sendEvolutionTextMessage({ number: message.phone, text: "Seu trial ou assinatura precisa estar ativo para registrar pelo WhatsApp." });
+
+    return NextResponse.json({ ok: true, inactiveFamily: true });
+  }
+
+  const agentResult = await runFinanceWhatsappAgent({ text: message.text, phone: message.phone, organizationId: family.organizationId });
 
   if (agentResult.kind === "transaction_proposal") {
     await createPendingWhatsappTransaction({

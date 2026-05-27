@@ -47,9 +47,9 @@ export function DashboardPageClient({
       </SectionHeader>
 
       <section className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <MetricCard title="Entradas do mes" value={data.metrics.monthlyIncome} caption={`Inclui ${formatCurrency(data.metrics.monthlySalaryIncome)} em salarios`} />
-        <MetricCard title="Saidas do mes" value={data.metrics.monthlyExpense} tone="red" caption="Inclui parcelas ja geradas" />
-        <MetricCard title="Resultado mensal" value={data.metrics.monthlyBalance} tone={data.metrics.monthlyBalance >= 0 ? "green" : "red"} caption="Entradas menos saidas" />
+        <MetricCard title="Entradas do mês" value={data.metrics.monthlyIncome} caption={`Inclui ${formatCurrency(data.metrics.monthlySalaryIncome)} em salários`} />
+        <MetricCard title="Saídas do mês" value={data.metrics.monthlyExpense} tone="red" caption="Inclui parcelas já geradas" />
+        <MetricCard title="Resultado mensal" value={data.metrics.monthlyBalance} tone={data.metrics.monthlyBalance >= 0 ? "green" : "red"} caption="Entradas menos saídas" />
         <MetricCard title="Economia" value={data.metrics.monthlySavingsRate} kind="percent" tone={data.metrics.monthlySavingsRate >= 0 ? "green" : "red"} caption="Saldo dividido por entradas" />
       </section>
 
@@ -57,10 +57,10 @@ export function DashboardPageClient({
         <div className="glass-panel rounded-[1.7rem] p-5">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.26em] text-[#39ff14]/75">ano {data.selectedYear}</p>
-              <h2 className="mt-1 text-xl font-semibold text-white">Entradas vs saidas</h2>
+              <p className="text-sm font-bold uppercase tracking-[0.26em] text-primary/75">ano {data.selectedYear}</p>
+              <h2 className="mt-1 text-xl font-semibold text-white">Entradas vs saídas</h2>
             </div>
-            <CalendarDays className="size-5 text-[#39ff14]" />
+            <CalendarDays className="size-5 text-primary" />
           </div>
           <AnnualTrendChart data={data.annualTrend} />
         </div>
@@ -68,12 +68,12 @@ export function DashboardPageClient({
         <div className="grid gap-4">
           <article className="glass-panel rounded-[1.7rem] p-5">
             <div className="flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-2xl bg-[#39ff14]/10 text-[#39ff14]">
+              <span className="grid size-11 place-items-center rounded-2xl bg-primary/10 text-primary">
                 <TrendingUp className="size-5" />
               </span>
               <div>
                 <p className="text-sm text-[#96a59b]">Total anual</p>
-                <strong className="text-2xl text-[#39ff14]">{formatCurrency(data.metrics.annualBalance)}</strong>
+                <strong className="text-2xl text-primary">{formatCurrency(data.metrics.annualBalance)}</strong>
               </div>
             </div>
           </article>
@@ -83,15 +83,15 @@ export function DashboardPageClient({
                 <TrendingDown className="size-5" />
               </span>
               <div>
-                <p className="text-sm text-[#96a59b]">Divida futura parcelada</p>
+                <p className="text-sm text-[#96a59b]">Dívida futura parcelada</p>
                 <strong className="text-2xl text-[#ff4d4d]">{formatCurrency(data.metrics.futureDebt)}</strong>
               </div>
             </div>
           </article>
           <article className="glass-panel rounded-[1.7rem] p-5">
-            <p className="text-sm text-[#96a59b]">Cartao no mes</p>
+            <p className="text-sm text-[#96a59b]">Cartão no mês</p>
             <strong className="mt-2 block text-2xl text-white">{formatCurrency(data.metrics.creditCardExpense)}</strong>
-            <p className="mt-2 text-sm text-[#96a59b]">Gastos em contas do tipo cartao de credito.</p>
+            <p className="mt-2 text-sm text-[#96a59b]">Gastos em contas do tipo cartão de crédito.</p>
           </article>
         </div>
       </section>
@@ -99,12 +99,12 @@ export function DashboardPageClient({
       <section className="mb-6 grid gap-4 lg:grid-cols-2">
         <div className="glass-panel rounded-[1.7rem] p-5">
           <h2 className="text-xl font-semibold text-white">Gastos por categoria</h2>
-          <p className="mt-1 text-sm text-[#96a59b]">Top categorias do mes selecionado.</p>
+          <p className="mt-1 text-sm text-[#96a59b]">Top categorias do mês selecionado.</p>
           <BreakdownChart data={data.breakdowns.byCategory} />
         </div>
         <div className="glass-panel rounded-[1.7rem] p-5">
           <h2 className="text-xl font-semibold text-white">Gastos por conta</h2>
-          <p className="mt-1 text-sm text-[#96a59b]">Cartao, debito, Pix, banco e dinheiro.</p>
+          <p className="mt-1 text-sm text-[#96a59b]">Cartão, débito, Pix, banco e dinheiro.</p>
           <BreakdownChart data={data.breakdowns.byAccount} />
         </div>
       </section>
@@ -112,10 +112,10 @@ export function DashboardPageClient({
       <section className="glass-panel rounded-[1.7rem] p-5">
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="text-xl font-semibold text-white">Movimentos do mes</h2>
-            <p className="mt-1 text-sm text-[#96a59b]">Entradas, saidas e parcelas com competencia em {getMonthLabel(data.selectedMonth)}.</p>
+            <h2 className="text-xl font-semibold text-white">Movimentos do mês</h2>
+            <p className="mt-1 text-sm text-[#96a59b]">Entradas, saídas e parcelas com competência em {getMonthLabel(data.selectedMonth)}.</p>
           </div>
-          <Link className="inline-flex items-center gap-2 text-sm font-semibold text-[#39ff14]" href={`/transactions?month=${data.selectedMonth}`}>
+          <Link className="inline-flex items-center gap-2 text-sm font-semibold text-primary" href={`/transactions?month=${data.selectedMonth}`}>
             Ver tudo <ArrowUpRight className="size-4" />
           </Link>
         </div>

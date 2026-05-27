@@ -54,7 +54,7 @@ export function FormInput<T extends FieldValues>({
         disabled={disabled}
         {...form.register(name)}
       />
-      {typeof error === "string" ? <span className="text-xs text-[#ff7070]">{error}</span> : null}
+      {typeof error === "string" ? <span className="text-sm text-[#ff7070]">{error}</span> : null}
     </label>
   );
 }
@@ -81,10 +81,10 @@ export function FormSelect<T extends FieldValues>({
             onValueChange={field.onChange}
             disabled={disabled}
           >
-            <SelectTrigger className="field flex min-h-12 items-center justify-between gap-3 text-left [&_svg]:text-[#39ff14]">
+            <SelectTrigger className="field flex min-h-12 items-center justify-between gap-3 text-left [&_svg]:text-primary">
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
-            <SelectContent position="popper" className="z-[90] max-h-72 rounded-2xl border-[#39ff14]/20 bg-[#07100a] p-2 text-sm text-[#eefbf1] shadow-2xl shadow-black/60">
+            <SelectContent position="popper" className="z-[90] max-h-72 rounded-2xl border-primary/20 bg-[#07100a] p-2 text-sm text-[#eefbf1] shadow-2xl shadow-black/60">
               {options.map((option) => (
                 <SelectItem
                   key={option.value}
@@ -98,7 +98,7 @@ export function FormSelect<T extends FieldValues>({
           </Select>
         )}
       />
-      {typeof error === "string" ? <span className="text-xs text-[#ff7070]">{error}</span> : null}
+      {typeof error === "string" ? <span className="text-sm text-[#ff7070]">{error}</span> : null}
     </div>
   );
 }
@@ -122,7 +122,7 @@ export function FormDatePicker<T extends FieldValues>({
           <DatePicker value={field.value ? String(field.value) : ""} onValueChange={field.onChange} disabled={disabled} placeholder={placeholder} />
         )}
       />
-      {typeof error === "string" ? <span className="text-xs text-[#ff7070]">{error}</span> : null}
+      {typeof error === "string" ? <span className="text-sm text-[#ff7070]">{error}</span> : null}
     </label>
   );
 }
@@ -153,7 +153,7 @@ export function FormMonthPicker<T extends FieldValues>({
           />
         )}
       />
-      {typeof error === "string" ? <span className="text-xs text-[#ff7070]">{error}</span> : null}
+      {typeof error === "string" ? <span className="text-sm text-[#ff7070]">{error}</span> : null}
     </label>
   );
 }

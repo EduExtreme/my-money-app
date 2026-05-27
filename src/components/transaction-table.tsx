@@ -16,7 +16,7 @@ export function TransactionTable({
   if (!transactions.length) {
     return (
       <div className="rounded-2xl border border-dashed border-white/15 p-6 text-center text-sm text-[#96a59b]">
-        Nenhuma transacao encontrada para esse filtro.
+        Nenhuma transação encontrada para esse filtro.
       </div>
     );
   }
@@ -24,16 +24,16 @@ export function TransactionTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[980px] border-separate border-spacing-y-2 text-left text-sm">
-        <thead className="text-xs uppercase tracking-[0.2em] text-[#96a59b]">
+        <thead className="text-sm uppercase tracking-[0.2em] text-[#96a59b]">
           <tr>
-            <th className="px-4 py-2">Descricao</th>
+            <th className="px-4 py-2">Descrição</th>
             <th className="px-4 py-2">Tipo</th>
             <th className="px-4 py-2">Conta</th>
             <th className="px-4 py-2">Categoria</th>
             <th className="px-4 py-2">Parcela</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2 text-right">Valor</th>
-            {actionOptions ? <th className="px-4 py-2 text-right">Acoes</th> : null}
+            {actionOptions ? <th className="px-4 py-2 text-right">Ações</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -45,12 +45,12 @@ export function TransactionTable({
               <tr key={transaction.id} className="bg-white/[0.035] text-[#e9f6ec]">
                 <td className="rounded-l-2xl px-4 py-3">
                   <div className="font-medium text-white">{transaction.description}</div>
-                  <div className="text-xs text-[#96a59b]">{formatDateInput(transaction.transactionDate)}</div>
+                  <div className="text-sm text-[#96a59b]">{formatDateInput(transaction.transactionDate)}</div>
                 </td>
                 <td className="px-4 py-3">{getTransactionTypeLabel(transaction.type)}</td>
                 <td className="px-4 py-3">
                   <div>{transaction.accountName}</div>
-                  <div className="text-xs text-[#96a59b]">{getAccountTypeLabel(transaction.accountType)}</div>
+                  <div className="text-sm text-[#96a59b]">{getAccountTypeLabel(transaction.accountType)}</div>
                 </td>
                 <td className="px-4 py-3">
                   <span className="inline-flex items-center gap-2">
@@ -62,17 +62,17 @@ export function TransactionTable({
                   {transaction.installmentNumber}/{transaction.installmentTotal}
                 </td>
                 <td className="px-4 py-3">
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-[#dce8df]">
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-sm text-[#dce8df]">
                     {getStatusLabel(transaction.status)}
                   </span>
                 </td>
-                <td className={`px-4 py-3 text-right font-semibold ${actionOptions ? "" : "rounded-r-2xl"} ${transaction.type === "expense" ? "text-[#ff4d4d]" : "text-[#39ff14]"}`}>
+                <td className={`px-4 py-3 text-right font-semibold ${actionOptions ? "" : "rounded-r-2xl"} ${transaction.type === "expense" ? "text-[#ff4d4d]" : "text-[#10b981]"}`}>
                   <div>
                     {transaction.type === "expense" ? "-" : "+"}
                     {formatCurrency(transaction.amountCents)}
                   </div>
                   {isCarryOver ? (
-                    <div className="mt-1 text-xs font-normal text-[#ffb4b4]">
+                    <div className="mt-1 text-sm font-normal text-[#ffb4b4]">
                       vem de {getMonthLabel(carryOverOriginMonth)}
                     </div>
                   ) : null}

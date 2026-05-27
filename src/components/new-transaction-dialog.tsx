@@ -30,8 +30,8 @@ type FormDataResponse = {
 };
 
 export function NewTransactionDialog({
-  className = "inline-flex items-center justify-center gap-2 rounded-2xl bg-[#39ff14] px-4 py-2.5 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65]",
-  label = "Nova transacao",
+  className = "inline-flex items-center justify-center gap-2 rounded-2xl bg-[#10b981] px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#059669]",
+  label = "Nova transação",
 }: {
   className?: string;
   label?: string;
@@ -45,7 +45,7 @@ export function NewTransactionDialog({
       const response = await fetch("/api/transaction-form-data", { cache: "no-store" });
 
       if (!response.ok) {
-        throw new Error("Nao foi possivel carregar contas e categorias.");
+        throw new Error("Não foi possível carregar contas e categorias.");
       }
 
       return (await response.json()) as FormDataResponse;
@@ -86,9 +86,9 @@ export function NewTransactionDialog({
       <DialogContent showCloseButton={false} className="glass-panel max-h-[calc(100vh-2rem)] w-full max-w-4xl overflow-y-auto rounded-[1.7rem] p-5 text-left text-[#eefbf1] sm:max-w-4xl">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
-                  <DialogTitle className="text-2xl font-semibold text-white">Nova transacao</DialogTitle>
+                  <DialogTitle className="text-2xl font-semibold text-white">Nova transação</DialogTitle>
                   <DialogDescription className="mt-2 text-sm text-[#96a59b]">
-                    Cadastre entradas, saidas e compras parceladas sem sair da tela atual.
+                    Cadastre entradas, saídas e compras parceladas sem sair da tela atual.
                   </DialogDescription>
                 </div>
                 <DialogClose
@@ -111,7 +111,7 @@ export function NewTransactionDialog({
                 })}
               >
                 <div className="grid gap-4 md:grid-cols-2">
-                  <FormInput form={form} name="description" label="Descricao" placeholder="Notebook, mercado, cliente..." disabled={disabled} />
+                  <FormInput form={form} name="description" label="Descrição" placeholder="Notebook, mercado, cliente..." disabled={disabled} />
                   <FormSelect
                     form={form}
                     name="type"
@@ -158,12 +158,12 @@ export function NewTransactionDialog({
                     disabled={disabled}
                     options={transactionStatuses.map((status) => ({ value: status.value, label: status.label }))}
                   />
-                  <FormInput form={form} name="notes" label="Observacoes" placeholder="Opcional" disabled={disabled} />
+                  <FormInput form={form} name="notes" label="Observações" placeholder="Opcional" disabled={disabled} />
                 </div>
 
                 {data && (data.accounts.length === 0 || data.categories.length === 0) ? (
                   <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">
-                    Cadastre ao menos uma conta e uma categoria antes de registrar transacoes.
+                    Cadastre ao menos uma conta e uma categoria antes de registrar transações.
                   </p>
                 ) : null}
                 {mutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{mutation.error.message}</p> : null}
@@ -172,8 +172,8 @@ export function NewTransactionDialog({
                   <DialogClose className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10" type="button">
                     Cancelar
                   </DialogClose>
-                  <AppButton className="rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={disabled || mutation.isPending} type="submit">
-                    Salvar transacao
+                  <AppButton className="rounded-2xl bg-[#10b981] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#059669] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={disabled || mutation.isPending} type="submit">
+                    Salvar transação
                   </AppButton>
                 </div>
               </form>

@@ -13,7 +13,7 @@ type MetricCardProps = {
 
 export function MetricCard({ title, value, kind = "currency", caption, tone = "green" }: MetricCardProps) {
   const formattedValue = kind === "currency" ? formatCurrency(value) : kind === "percent" ? formatPercent(value) : value;
-  const toneClass = tone === "red" ? "text-[#ff4d4d]" : tone === "green" ? "text-[#39ff14]" : "text-white";
+  const toneClass = tone === "red" ? "text-destructive" : tone === "green" ? "text-primary" : "text-white";
 
   return (
     <article className="glass-panel rounded-[1.5rem] p-5">
@@ -32,7 +32,7 @@ export function SectionHeader({
   return (
     <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        {eyebrow ? <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#39ff14]/75">{eyebrow}</p> : null}
+        {eyebrow ? <p className="text-sm font-bold uppercase tracking-[0.28em] text-primary/75">{eyebrow}</p> : null}
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h1>
       </div>
       {children}
@@ -51,8 +51,8 @@ export function DatabaseBanner({ message, mode }: { message: string | null; mode
     <div
       className={`mb-6 rounded-[1.4rem] border px-4 py-3 text-sm ${
         isError
-          ? "danger-glow border-[#ff3131]/35 bg-[#ff3131]/10 text-[#ffd6d6]"
-          : "neon-glow border-[#39ff14]/30 bg-[#39ff14]/10 text-[#d9ffd4]"
+          ? "danger-glow border-destructive/35 bg-destructive/10 text-[#ffd6d6]"
+          : "neon-glow border-primary/30 bg-primary/10 text-primary-foreground/90"
       }`}
     >
       {message} Rode as migrations antes de cadastrar dados reais.
@@ -66,7 +66,7 @@ export function EmptyState({ title, description, href, label }: { title: string;
       <h2 className="text-xl font-semibold text-white">{title}</h2>
       <p className="mx-auto mt-2 max-w-lg text-sm text-[#a7b4ac]">{description}</p>
       {href && label ? (
-        <Link className="mt-5 inline-flex rounded-2xl bg-[#39ff14] px-4 py-2 text-sm font-bold text-[#041006]" href={href}>
+        <Link className="mt-5 inline-flex rounded-2xl bg-primary px-4 py-2 text-sm font-bold text-primary-foreground transition hover:opacity-90" href={href}>
           {label}
         </Link>
       ) : null}
@@ -79,7 +79,7 @@ export function SubmitButton({ disabled, children }: Readonly<{ disabled?: boole
     <AppButton
       type="submit"
       disabled={disabled}
-      className="inline-flex items-center justify-center rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40"
+      className="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 text-sm font-bold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40"
     >
       {children}
     </AppButton>

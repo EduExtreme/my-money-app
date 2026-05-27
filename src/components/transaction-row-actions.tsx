@@ -102,14 +102,14 @@ export function TransactionRowActions({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
           aria-label={`Editar ${transaction.description}`}
-          className="grid size-9 place-items-center rounded-xl border border-[#39ff14]/25 bg-[#39ff14]/10 text-[#39ff14] transition hover:bg-[#39ff14]/20"
+          className="grid size-9 place-items-center rounded-xl border border-[#10b981]/25 bg-[#10b981]/10 text-[#10b981] transition hover:bg-[#10b981]/20"
         >
           <Pencil className="size-4" />
         </DialogTrigger>
         <DialogContent showCloseButton={false} className="glass-panel max-h-[calc(100vh-2rem)] w-full max-w-3xl overflow-y-auto rounded-[1.7rem] p-5 text-left text-[#eefbf1] sm:max-w-3xl">
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div>
-                    <DialogTitle className="text-2xl font-semibold text-white">Editar transacao</DialogTitle>
+                    <DialogTitle className="text-2xl font-semibold text-white">Editar transação</DialogTitle>
                     <DialogDescription className="mt-2 text-sm text-[#96a59b]">
                       Alterar estes dados recria todas as parcelas da compra ou entrada selecionada.
                     </DialogDescription>
@@ -125,7 +125,7 @@ export function TransactionRowActions({
 
                 <form className="grid gap-4" onSubmit={form.handleSubmit((values) => updateMutation.mutate(values))}>
                   <div className="grid gap-4 md:grid-cols-2">
-                    <FormInput form={form} name="description" label="Descricao" disabled={updateMutation.isPending} />
+                    <FormInput form={form} name="description" label="Descrição" disabled={updateMutation.isPending} />
                     <FormSelect
                       form={form}
                       name="type"
@@ -172,7 +172,7 @@ export function TransactionRowActions({
                       disabled={updateMutation.isPending}
                       options={transactionStatuses.map((status) => ({ value: status.value, label: getStatusLabel(status.value) }))}
                     />
-                    <FormInput form={form} name="notes" label="Observacoes" disabled={updateMutation.isPending} />
+                    <FormInput form={form} name="notes" label="Observações" disabled={updateMutation.isPending} />
                   </div>
                   {updateMutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{updateMutation.error.message}</p> : null}
 
@@ -180,8 +180,8 @@ export function TransactionRowActions({
                     <DialogClose className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10" type="button">
                       Cancelar
                     </DialogClose>
-                    <AppButton className="rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={updateMutation.isPending} type="submit">
-                      Salvar alteracoes
+                    <AppButton className="rounded-2xl bg-[#10b981] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#059669] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={updateMutation.isPending} type="submit">
+                      Salvar alterações
                     </AppButton>
                   </div>
                 </form>
@@ -200,9 +200,9 @@ export function TransactionRowActions({
         <DialogContent showCloseButton={false} className="glass-panel w-full max-w-md rounded-[1.7rem] p-5 text-left text-[#eefbf1] sm:max-w-md">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
-              <DialogTitle className="text-2xl font-semibold text-white">Excluir transacao?</DialogTitle>
+              <DialogTitle className="text-2xl font-semibold text-white">Excluir transação?</DialogTitle>
               <DialogDescription className="mt-2 text-sm text-[#96a59b]">
-                Esta acao exclui a transacao e todas as parcelas relacionadas. Nao sera possivel desfazer.
+                Esta ação exclui a transação e todas as parcelas relacionadas. Não será possível desfazer.
               </DialogDescription>
             </div>
             <DialogClose
@@ -226,7 +226,7 @@ export function TransactionRowActions({
               type="button"
               onClick={() => deleteMutation.mutate()}
             >
-              Excluir transacao
+              Excluir transação
             </AppButton>
           </div>
         </DialogContent>

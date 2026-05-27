@@ -90,7 +90,7 @@ export function FutureExpensesPageClient({
 
       <section className="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard
-          title="Planejado no mes"
+          title="Planejado no mês"
           value={totalPlanned}
           tone="red"
           caption={
@@ -99,12 +99,12 @@ export function FutureExpensesPageClient({
               : `Sem valores de meses anteriores em ${getMonthLabel(selectedMonth)}`
           }
         />
-        <MetricCard title="Gastos planejados" value={expenses.length} kind="number" tone="neutral" caption="Lancamentos previstos" />
+        <MetricCard title="Gastos planejados" value={expenses.length} kind="number" tone="neutral" caption="Lançamentos previstos" />
         <MetricCard
-          title="Planejamento ate o fim do ano"
+          title="Planejamento até o fim do ano"
           value={plannedUntilYearEndTotal}
           tone="red"
-          caption={`Despesas planejadas de ${getMonthLabel(selectedMonth)} ate dezembro`}
+          caption={`Despesas planejadas de ${getMonthLabel(selectedMonth)} até dezembro`}
         />
         <MetricCard title="Saldo projetado" value={projectedBalance} tone={projectedBalance >= 0 ? "green" : "red"} caption="Entradas previstas menos gastos" />
       </section>
@@ -112,14 +112,14 @@ export function FutureExpensesPageClient({
       <Collapsible.Root defaultOpen={false} className="mb-6 glass-panel rounded-[1.7rem] p-5">
         <Collapsible.Trigger className="group flex w-full items-center justify-between gap-4 text-left">
           <div>
-            <h2 className="text-xl font-semibold text-white">Composicao do planejamento ate o fim do ano</h2>
+            <h2 className="text-xl font-semibold text-white">Composição do planejamento até o fim do ano</h2>
             <p className="mt-1 text-sm text-[#96a59b]">
-              Soma das despesas planejadas de {getMonthLabel(selectedMonth)} ate dezembro, agrupadas por mes.
+              Soma das despesas planejadas de {getMonthLabel(selectedMonth)} até dezembro, agrupadas por mês.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
             <strong className="text-2xl text-[#ff4d4d]">{formatCurrency(plannedUntilYearEndTotal)}</strong>
-            <ChevronDown className="size-5 text-[#39ff14] transition group-data-[panel-open]:rotate-180" />
+            <ChevronDown className="size-5 text-primary transition group-data-[panel-open]:rotate-180" />
           </div>
         </Collapsible.Trigger>
 
@@ -127,9 +127,9 @@ export function FutureExpensesPageClient({
           {plannedUntilYearEndBreakdown.length ? (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[520px] border-separate border-spacing-y-2 text-left text-sm">
-                <thead className="text-xs uppercase tracking-[0.2em] text-[#96a59b]">
+                <thead className="text-sm uppercase tracking-[0.2em] text-[#96a59b]">
                   <tr>
-                    <th className="px-4 py-2">Mes</th>
+                    <th className="px-4 py-2">Mês</th>
                     <th className="px-4 py-2 text-right">Parcelas</th>
                     <th className="px-4 py-2 text-right">Subtotal</th>
                   </tr>
@@ -156,7 +156,7 @@ export function FutureExpensesPageClient({
             </div>
           ) : (
             <p className="rounded-2xl border border-dashed border-white/15 p-5 text-center text-sm text-[#96a59b]">
-              Nenhuma despesa planejada encontrada ate o fim do ano.
+              Nenhuma despesa planejada encontrada até o fim do ano.
             </p>
           )}
         </Collapsible.Panel>
@@ -164,13 +164,13 @@ export function FutureExpensesPageClient({
 
       {data.mode === "database" && (accounts.length === 0 || expenseCategories.length === 0) ? (
         <p className="mb-6 rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">
-          Cadastre uma conta e uma categoria de saida antes de planejar gastos futuros.
+          Cadastre uma conta e uma categoria de saída antes de planejar gastos futuros.
         </p>
       ) : null}
 
       <section className="glass-panel rounded-[1.7rem] p-5">
         <h2 className="text-xl font-semibold text-white">Gastos previstos para {getMonthLabel(selectedMonth)}</h2>
-        <p className="mt-1 text-sm text-[#96a59b]">Inclui despesas planejadas e parcelas que caem no mes selecionado.</p>
+        <p className="mt-1 text-sm text-[#96a59b]">Inclui despesas planejadas e parcelas que caem no mês selecionado.</p>
         <div className="mt-4">
           <TransactionTable actionOptions={actionOptions} carryOverMonth={selectedMonth} transactions={expenses} />
         </div>

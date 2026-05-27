@@ -42,14 +42,14 @@ export function TransactionsFilters({ month, type }: { month: string; type: "all
         options={[
           { value: "all", label: "Todos os tipos" },
           { value: "income", label: "Entradas" },
-          { value: "expense", label: "Saidas" },
+          { value: "expense", label: "Saídas" },
         ]}
       />
     </div>
   );
 }
 
-export function MonthFilter({ month, pathLabel = "Mes" }: { month: string; pathLabel?: string }) {
+export function MonthFilter({ month, pathLabel = "Mês" }: { month: string; pathLabel?: string }) {
   const [selectedMonth, setSelectedMonth] = useQueryState("month", parseAsString.withDefault(month));
 
   return (
@@ -93,10 +93,10 @@ function UrlSelect({
 }) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className="field flex min-h-12 items-center justify-between gap-3 text-left [&_svg]:text-[#39ff14]">
+      <SelectTrigger className="field flex min-h-12 items-center justify-between gap-3 text-left [&_svg]:text-[#10b981]">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent position="popper" className="z-[90] max-h-72 rounded-2xl border-[#39ff14]/20 bg-[#07100a] p-2 text-sm text-[#eefbf1] shadow-2xl shadow-black/60">
+      <SelectContent position="popper" className="z-[90] max-h-72 rounded-2xl border-[#10b981]/20 bg-[#07100a] p-2 text-sm text-[#eefbf1] shadow-2xl shadow-black/60">
         {options.map((option) => (
           <SelectItem
             key={option.value}

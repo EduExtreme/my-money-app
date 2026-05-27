@@ -1,14 +1,14 @@
 export const accountTypes = [
-  { value: "credit_card", label: "Cartao de credito" },
-  { value: "debit_card", label: "Cartao de debito" },
+  { value: "credit_card", label: "Cartão de crédito" },
+  { value: "debit_card", label: "Cartão de débito" },
   { value: "pix", label: "Pix" },
-  { value: "bank", label: "Conta bancaria" },
+  { value: "bank", label: "Conta bancária" },
   { value: "cash", label: "Dinheiro" },
 ] as const;
 
 export const transactionTypes = [
   { value: "income", label: "Entrada" },
-  { value: "expense", label: "Saida" },
+  { value: "expense", label: "Saída" },
 ] as const;
 
 export const transactionStatuses = [

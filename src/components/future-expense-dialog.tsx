@@ -77,7 +77,7 @@ export function FutureExpenseDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#39ff14] px-4 py-2.5 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65]">
+      <DialogTrigger className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-2.5 text-sm font-bold text-primary-foreground transition hover:bg-primary/90">
         <CalendarPlus className="size-4" />
         Novo gasto futuro
       </DialogTrigger>
@@ -86,7 +86,7 @@ export function FutureExpenseDialog({
                 <div>
                   <DialogTitle className="text-2xl font-semibold text-white">Novo gasto futuro</DialogTitle>
                   <DialogDescription className="mt-2 text-sm text-[#96a59b]">
-                    Escolha o mes inicial do gasto. Se tiver parcelas, elas serao geradas a partir desse mes.
+                    Escolha o mês inicial do gasto. Se tiver parcelas, elas serão geradas a partir desse mês.
                   </DialogDescription>
                 </div>
                 <DialogClose
@@ -100,11 +100,11 @@ export function FutureExpenseDialog({
 
               <form className="grid gap-4" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <FormInput form={form} name="description" label="Descricao" placeholder="IPTU, viagem, matricula..." disabled={isDisabled} />
+                  <FormInput form={form} name="description" label="Descrição" placeholder="IPTU, viagem, matrícula..." disabled={isDisabled} />
                   <FormInput form={form} name="amount" label="Valor total" inputMode="decimal" placeholder="800,00" disabled={isDisabled} />
                 </div>
                 <div className="grid gap-4 md:grid-cols-3">
-                  <FormMonthPicker form={form} name="startMonth" label="Mes inicial" disabled={isDisabled} />
+                  <FormMonthPicker form={form} name="startMonth" label="Mês inicial" disabled={isDisabled} />
                   <FormInput form={form} name="day" label="Dia" type="number" min={1} max={31} disabled={isDisabled} />
                   <FormInput form={form} name="installments" label="Parcelas" type="number" min={1} max={360} disabled={isDisabled} />
                 </div>
@@ -124,13 +124,13 @@ export function FutureExpenseDialog({
                     options={categories.map((category) => ({ value: String(category.id), label: `${category.name} - ${getTransactionTypeLabel(category.type)}` }))}
                   />
                 </div>
-                <FormInput form={form} name="notes" label="Observacoes" placeholder="Opcional" disabled={isDisabled} />
+                <FormInput form={form} name="notes" label="Observações" placeholder="Opcional" disabled={isDisabled} />
                 {mutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{mutation.error.message}</p> : null}
                 <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                   <DialogClose className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10" type="button">
                     Cancelar
                   </DialogClose>
-                  <AppButton className="rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={isDisabled} type="submit">
+                  <AppButton className="rounded-2xl bg-primary px-5 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={isDisabled} type="submit">
                     Salvar gasto futuro
                   </AppButton>
                 </div>

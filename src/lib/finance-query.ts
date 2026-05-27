@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getFinanceDataQueryKey } from "@/lib/query-keys";
 import type { FinanceData, FinanceQueryInput } from "@/lib/finance-types";
@@ -23,6 +23,7 @@ export function useFinanceDataQuery({
     queryKey: getFinanceDataQueryKey(input),
     queryFn: () => fetchFinanceData(input),
     initialData: isInitialQuery ? initialData : undefined,
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -40,7 +41,7 @@ export async function fetchFinanceData(input?: FinanceQueryInput) {
   const response = await fetch(`/api/finance-data${params.size ? `?${params}` : ""}`, { cache: "no-store" });
 
   if (!response.ok) {
-    throw new Error("Nao foi possivel carregar os dados financeiros.");
+    throw new Error("Não foi possível carregar os dados financeiros.");
   }
 
   return (await response.json()) as FinanceData;

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 import { getDb, isDatabaseConfigured } from "@/db/client";
 import { accounts, categories, salaries, transactionGroups, transactions } from "@/db/schema";
@@ -8,7 +8,7 @@ import type { FinanceData, SalaryWithMeta, TransactionWithMeta } from "@/lib/fin
 import { demoAccounts, demoCategories, demoSalaries, demoTransactions } from "./demo-data";
 import { getCurrentMonth, getCurrentYear, getShortMonthLabel, getYearMonths } from "./dates";
 
-export async function getFinanceData(month = getCurrentMonth(), year = getCurrentYear()): Promise<FinanceData> {
+export async function getFinanceData(month = getCurrentMonth(), year = getCurrentYear(), organizationId?: string): Promise<FinanceData> {
   try {
     if (!isDatabaseConfigured) {
       return buildFinanceData({
@@ -24,9 +24,13 @@ export async function getFinanceData(month = getCurrentMonth(), year = getCurren
     }
 
     const db = getDb();
+    if (!organizationId) {
+      throw new Error("Família não identificada para carregar os dados financeiros.");
+    }
+
     const [accountsData, categoriesData, transactionsData, salariesData] = await Promise.all([
-      db.select().from(accounts).orderBy(desc(accounts.createdAt)),
-      db.select().from(categories).orderBy(desc(categories.createdAt)),
+      db.select().from(accounts).where(eq(accounts.organizationId, organizationId)).orderBy(desc(accounts.createdAt)),
+      db.select().from(categories).where(eq(categories.organizationId, organizationId)).orderBy(desc(categories.createdAt)),
       db
         .select({
           id: transactions.id,
@@ -56,6 +60,7 @@ export async function getFinanceData(month = getCurrentMonth(), year = getCurren
         .innerJoin(transactionGroups, eq(transactions.groupId, transactionGroups.id))
         .innerJoin(accounts, eq(transactions.accountId, accounts.id))
         .innerJoin(categories, eq(transactions.categoryId, categories.id))
+        .where(eq(transactions.organizationId, organizationId))
         .orderBy(desc(transactions.transactionDate), desc(transactions.id)),
       db
         .select({
@@ -77,6 +82,7 @@ export async function getFinanceData(month = getCurrentMonth(), year = getCurren
         .from(salaries)
         .innerJoin(accounts, eq(salaries.accountId, accounts.id))
         .innerJoin(categories, eq(salaries.categoryId, categories.id))
+        .where(eq(salaries.organizationId, organizationId))
         .orderBy(desc(salaries.createdAt), desc(salaries.id)),
     ]);
 
@@ -101,14 +107,14 @@ export async function getFinanceData(month = getCurrentMonth(), year = getCurren
       mode: "error" as const,
       databaseMessage:
         error instanceof Error
-          ? `Nao foi possivel ler o NeonDB: ${error.message}`
-          : "Nao foi possivel ler o NeonDB.",
+          ? `Não foi possível ler o NeonDB: ${error.message}`
+          : "Não foi possível ler o NeonDB.",
     });
   }
 }
 
-export async function getBasicFormData() {
-  const data = await getFinanceData();
+export async function getBasicFormData(organizationId?: string) {
+  const data = await getFinanceData(undefined, undefined, organizationId);
 
   return {
     accounts: data.accounts,
@@ -119,7 +125,7 @@ export async function getBasicFormData() {
   };
 }
 
-export async function getMonthlyTransactionCount(month: string) {
+export async function getMonthlyTransactionCount(month: string, organizationId?: string) {
   if (!isDatabaseConfigured) {
     return demoTransactions.filter((transaction) => transaction.competencyMonth === month).length;
   }
@@ -128,7 +134,11 @@ export async function getMonthlyTransactionCount(month: string) {
   const [result] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(transactions)
-    .where(eq(transactions.competencyMonth, month));
+    .where(
+      organizationId
+        ? and(eq(transactions.competencyMonth, month), eq(transactions.organizationId, organizationId))
+        : eq(transactions.competencyMonth, month),
+    );
 
   return result?.count ?? 0;
 }
@@ -242,12 +252,12 @@ function enrichDemoTransaction(transaction: (typeof demoTransactions)[number]): 
     groupTotalAmountCents: transaction.amountCents * transaction.installmentTotal,
     groupInstallmentCount: transaction.installmentTotal,
     groupFirstDate: transaction.transactionDate,
-    groupNotes: transaction.notes,
-    accountName: account?.name ?? "Conta",
-    accountType: account?.type ?? "bank",
-    accountColor: account?.color ?? "#39ff14",
-    categoryName: category?.name ?? "Categoria",
-    categoryColor: category?.color ?? "#39ff14",
+    groupNotes: null,
+    accountName: account?.name ?? "Conta de Exemplo",
+    accountType: account?.type ?? "pix",
+    accountColor: account?.color ?? "#10b981",
+    categoryName: category?.name ?? "Categoria de Exemplo",
+    categoryColor: category?.color ?? "#10b981",
   };
 }
 
@@ -257,17 +267,11 @@ function enrichDemoSalary(salary: (typeof demoSalaries)[number]): SalaryWithMeta
 
   return {
     ...salary,
-    accountName: account?.name ?? "Conta",
-    accountType: account?.type ?? "bank",
-    categoryName: category?.name ?? "Salario",
-    categoryColor: category?.color ?? "#39ff14",
+    accountName: account?.name ?? "Conta de Exemplo",
+    accountType: account?.type ?? "pix",
+    categoryName: category?.name ?? "Categoria de Exemplo",
+    categoryColor: category?.color ?? "#10b981",
   };
-}
-
-function sumByType(items: TransactionWithMeta[], type: "income" | "expense") {
-  return items
-    .filter((transaction) => transaction.type === type)
-    .reduce((total, transaction) => total + transaction.amountCents, 0);
 }
 
 function sumSalaries(items: SalaryWithMeta[]) {
@@ -285,6 +289,12 @@ function getActiveSalariesForMonth(items: SalaryWithMeta[], month: string) {
 
     return started && notEnded;
   });
+}
+
+function sumByType(items: TransactionWithMeta[], type: "income" | "expense") {
+  return items
+    .filter((item) => item.type === type)
+    .reduce((total, item) => total + item.amountCents, 0);
 }
 
 function groupSum(items: TransactionWithMeta[], key: "categoryName" | "accountName") {

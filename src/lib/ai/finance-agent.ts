@@ -36,11 +36,11 @@ const transactionProposalInputSchema = z.object({
   notes: z.string().optional().describe("Optional short note."),
 });
 
-export async function runFinanceWhatsappAgent(input: { text: string; phone: string }): Promise<FinanceAgentResult> {
+export async function runFinanceWhatsappAgent(input: { text: string; phone: string; organizationId: string }): Promise<FinanceAgentResult> {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     return {
       kind: "clarification",
-      message: "Gemini ainda nao esta configurado. Defina GOOGLE_GENERATIVE_AI_API_KEY no .env.local.",
+      message: "Gemini ainda não está configurado. Defina GOOGLE_GENERATIVE_AI_API_KEY no .env.local.",
     } satisfies FinanceAgentResult;
   }
 
@@ -52,7 +52,7 @@ export async function runFinanceWhatsappAgent(input: { text: string; phone: stri
       description: "Get available accounts and categories from My Money App before proposing a transaction.",
       inputSchema: z.object({}),
       execute: async () => {
-        const context = await getBasicFormData();
+        const context = await getBasicFormData(input.organizationId);
 
         return {
           mode: context.mode,
@@ -66,7 +66,7 @@ export async function runFinanceWhatsappAgent(input: { text: string; phone: stri
       inputSchema: transactionProposalInputSchema,
       strict: true,
       execute: async (proposal) => {
-        agentResult = await buildTransactionProposal(proposal);
+        agentResult = await buildTransactionProposal(proposal, input.organizationId);
 
         return agentResult;
       },
@@ -90,7 +90,7 @@ export async function runFinanceWhatsappAgent(input: { text: string; phone: stri
       execute: async ({ reason }) => {
         agentResult = {
           kind: "ignored",
-          message: reason || "Mensagem ignorada porque nao parece ser um lancamento financeiro.",
+          message: reason || "Mensagem ignorada porque não parece ser um lançamento financeiro.",
         };
 
         return agentResult;
@@ -112,7 +112,7 @@ export async function runFinanceWhatsappAgent(input: { text: string; phone: stri
       "Valores devem ser convertidos para centavos de BRL.",
       "Se o usuario disser hoje, use a data atual informada. Se disser uma data futura, use status planned.",
       "Compras parceladas devem usar installments com o total de parcelas informado.",
-      "Se faltar o valor ou nao for claramente uma transacao, use ask_clarification ou ignore_message.",
+      "Se faltar o valor ou não for claramente uma transação, use ask_clarification ou ignore_message.",
       "Todas as transacoes precisam de confirmacao humana depois, entao a tool propose_transaction apenas cria uma proposta.",
     ].join("\n"),
     prompt: [
@@ -122,16 +122,19 @@ export async function runFinanceWhatsappAgent(input: { text: string; phone: stri
     ].join("\n"),
   });
 
-  return agentResult ?? ({ kind: "clarification", message: result.text || "Nao consegui entender esse lancamento." } satisfies FinanceAgentResult);
+  return agentResult ?? ({ kind: "clarification", message: result.text || "Não consegui entender esse lançamento." } satisfies FinanceAgentResult);
 }
 
-async function buildTransactionProposal(input: z.infer<typeof transactionProposalInputSchema>): Promise<FinanceAgentResult> {
-  const context = await getBasicFormData();
+async function buildTransactionProposal(
+  input: z.infer<typeof transactionProposalInputSchema>,
+  organizationId: string,
+): Promise<FinanceAgentResult> {
+  const context = await getBasicFormData(organizationId);
 
   if (context.mode !== "database") {
     return {
       kind: "clarification",
-      message: "Nao consegui acessar o banco de dados para registrar lancamentos reais.",
+      message: "Não consegui acessar o banco de dados para registrar lançamentos reais.",
     };
   }
 
@@ -141,7 +144,7 @@ async function buildTransactionProposal(input: z.infer<typeof transactionProposa
   if (!account || !category) {
     return {
       kind: "clarification",
-      message: "Nao encontrei conta ou categoria compativel. Cadastre uma conta/categoria ou informe melhor onde lancar.",
+      message: "Não encontrei conta ou categoria compatível. Cadastre uma conta/categoria ou informe melhor onde lançar.",
     };
   }
 
@@ -167,7 +170,7 @@ async function buildTransactionProposal(input: z.infer<typeof transactionProposa
     `Parcelas: ${payload.installments}`,
     `Status: ${payload.status === "paid" ? "Pago" : "Planejado"}`,
     "",
-    "Responda SIM para confirmar ou NAO para cancelar.",
+    "Responda SIM para confirmar ou NÃO para cancelar.",
   ].join("\n");
 
   return {

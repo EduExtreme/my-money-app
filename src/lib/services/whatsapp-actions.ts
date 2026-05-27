@@ -5,7 +5,7 @@ import { and, desc, eq, gt } from "drizzle-orm";
 import { z } from "zod";
 
 import { getDb } from "@/db/client";
-import { whatsappMessages, whatsappPendingActions, type WhatsappPendingAction } from "@/db/schema";
+import { accounts, categories, familyProfiles, organizationPhoneNumbers, whatsappMessages, whatsappPendingActions, type WhatsappPendingAction } from "@/db/schema";
 import { createTransactionRecord } from "@/lib/services/transactions";
 
 export const whatsappTransactionPayloadSchema = z.object({
@@ -106,16 +106,62 @@ export async function getActivePendingWhatsappAction(phone: string) {
 
 export async function confirmPendingWhatsappAction(action: WhatsappPendingAction) {
   if (action.actionType !== "create_transaction") {
-    throw new Error("Acao pendente nao suportada.");
+    throw new Error("Ação pendente não suportada.");
   }
 
   const payload = whatsappTransactionPayloadSchema.parse(action.payload);
-  await createTransactionRecord(payload);
+  const family = await getWhatsappFamilyContext(action.phone);
+  if (!family.hasPremiumAccess) {
+    throw new Error("Família sem trial ou assinatura ativa para registrar pelo WhatsApp.");
+  }
+  await assertWhatsappAccountAndCategory(family.organizationId, payload.accountId, payload.categoryId);
+  await createTransactionRecord({ ...payload, organizationId: family.organizationId, createdByUserId: family.leaderUserId });
 
   await getDb()
     .update(whatsappPendingActions)
     .set({ status: "confirmed", resolvedAt: new Date() })
     .where(eq(whatsappPendingActions.id, action.id));
+}
+
+export async function getWhatsappFamilyContext(phone: string) {
+  const [family] = await getDb()
+    .select({
+      organizationId: organizationPhoneNumbers.organizationId,
+      leaderUserId: familyProfiles.leaderUserId,
+      subscriptionStatus: familyProfiles.subscriptionStatus,
+      trialEndsAt: familyProfiles.trialEndsAt,
+    })
+    .from(organizationPhoneNumbers)
+    .innerJoin(familyProfiles, eq(organizationPhoneNumbers.organizationId, familyProfiles.organizationId))
+    .where(eq(organizationPhoneNumbers.phone, phone))
+    .limit(1);
+
+  if (!family) {
+    throw new Error("Telefone do WhatsApp não vinculado a uma família.");
+  }
+
+  return {
+    ...family,
+    hasPremiumAccess: family.subscriptionStatus === "active" || family.trialEndsAt > new Date(),
+  };
+}
+
+async function assertWhatsappAccountAndCategory(organizationId: string, accountId: number, categoryId: number) {
+  const db = getDb();
+  const [account] = await db
+    .select({ id: accounts.id })
+    .from(accounts)
+    .where(and(eq(accounts.id, accountId), eq(accounts.organizationId, organizationId)))
+    .limit(1);
+  const [category] = await db
+    .select({ id: categories.id })
+    .from(categories)
+    .where(and(eq(categories.id, categoryId), eq(categories.organizationId, organizationId)))
+    .limit(1);
+
+  if (!account || !category) {
+    throw new Error("Conta ou categoria do WhatsApp não pertence a esta família.");
+  }
 }
 
 export async function cancelPendingWhatsappAction(action: WhatsappPendingAction) {

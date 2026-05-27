@@ -12,7 +12,7 @@ config();
 const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
-  throw new Error("DATABASE_URL nao configurada.");
+  throw new Error("DATABASE_URL não configurada.");
 }
 
 const db = drizzle(neon(databaseUrl));
@@ -24,10 +24,10 @@ async function main() {
   if (accountCount === 0) {
     await db.insert(accounts).values([
       {
-        name: "Cartao Neon",
+        name: "Cartão Neon",
         type: "credit_card",
         institution: "Banco Principal",
-        color: "#39ff14",
+        color: "#10b981",
         creditLimitCents: 500000,
         closingDay: 25,
         dueDay: 5,
@@ -39,7 +39,7 @@ async function main() {
         color: "#00d4ff",
       },
       {
-        name: "Debito",
+        name: "Débito",
         type: "debit_card",
         institution: "Conta Corrente",
         color: "#a855f7",
@@ -49,7 +49,7 @@ async function main() {
 
   if (categoryCount === 0) {
     await db.insert(categories).values([
-      { name: "Salario", type: "income", color: "#39ff14" },
+      { name: "Salário", type: "income", color: "#10b981" },
       { name: "Freelance", type: "income", color: "#22c55e" },
       { name: "Mercado", type: "expense", color: "#ff3b30" },
       { name: "Transporte", type: "expense", color: "#fb7185" },
@@ -58,7 +58,7 @@ async function main() {
     ]);
   }
 
-  console.log("Seed concluido.");
+  console.log("Seed concluído.");
 }
 
 main().catch((error) => {

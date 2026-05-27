@@ -33,23 +33,25 @@ export function AnnualTrendChart({ data }: { data: TrendItem[] }) {
         <AreaChart data={data} margin={{ left: 0, right: 8, top: 12, bottom: 0 }}>
           <defs>
             <linearGradient id="income" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="5%" stopColor="#39ff14" stopOpacity={0.46} />
-              <stop offset="95%" stopColor="#39ff14" stopOpacity={0.02} />
+              <stop offset="5%" stopColor="#10b981" stopOpacity={0.46} />
+              <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
             </linearGradient>
             <linearGradient id="expense" x1="0" x2="0" y1="0" y2="1">
               <stop offset="5%" stopColor="#ff3131" stopOpacity={0.42} />
               <stop offset="95%" stopColor="#ff3131" stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-          <XAxis dataKey="month" stroke="#96a59b" tickLine={false} axisLine={false} />
-          <YAxis stroke="#96a59b" tickLine={false} axisLine={false} tickFormatter={(value) => `${Number(value) / 1000}k`} />
+          <CartesianGrid stroke="var(--border)" vertical={false} />
+          <XAxis dataKey="month" stroke="var(--muted-foreground)" tickLine={false} axisLine={false} />
+          <YAxis stroke="var(--muted-foreground)" tickLine={false} axisLine={false} tickFormatter={(value) => `${Number(value) / 1000}k`} />
           <Tooltip
-            contentStyle={{ background: "#07100a", border: "1px solid rgba(57,255,20,.25)", borderRadius: 16 }}
+            contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 16 }}
             formatter={(value, name) => [formatCurrency(Number(value ?? 0)), labelMap[String(name)] ?? String(name)]}
-            labelStyle={{ color: "#eefbf1" }}
+            labelStyle={{ color: "var(--foreground)" }}
+            itemStyle={{ color: "var(--foreground)" }}
+            cursor={{ stroke: "var(--chart-cursor-stroke)", strokeWidth: 2 }}
           />
-          <Area type="monotone" dataKey="income" stroke="#39ff14" strokeWidth={2} fill="url(#income)" />
+          <Area type="monotone" dataKey="income" stroke="#10b981" strokeWidth={2} fill="url(#income)" />
           <Area type="monotone" dataKey="expense" stroke="#ff3131" strokeWidth={2} fill="url(#expense)" />
         </AreaChart>
       </ResponsiveContainer>
@@ -64,15 +66,17 @@ export function BreakdownChart({ data }: { data: BreakdownItem[] }) {
     <div className="h-[320px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={safeData} layout="vertical" margin={{ left: 8, right: 20, top: 12, bottom: 0 }}>
-          <CartesianGrid stroke="rgba(255,255,255,0.08)" horizontal={false} />
-          <XAxis type="number" stroke="#96a59b" tickLine={false} axisLine={false} tickFormatter={(value) => `${Number(value) / 1000}k`} />
-          <YAxis type="category" dataKey="name" width={92} stroke="#96a59b" tickLine={false} axisLine={false} />
+          <CartesianGrid stroke="var(--border)" horizontal={false} />
+          <XAxis type="number" stroke="var(--muted-foreground)" tickLine={false} axisLine={false} tickFormatter={(value) => `${Number(value) / 1000}k`} />
+          <YAxis type="category" dataKey="name" width={92} stroke="var(--muted-foreground)" tickLine={false} axisLine={false} />
           <Tooltip
-            contentStyle={{ background: "#07100a", border: "1px solid rgba(57,255,20,.25)", borderRadius: 16 }}
+            contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 16 }}
             formatter={(value) => [formatCurrency(Number(value ?? 0)), "Total"]}
-            labelStyle={{ color: "#eefbf1" }}
+            labelStyle={{ color: "var(--foreground)" }}
+            itemStyle={{ color: "var(--foreground)" }}
+            cursor={{ fill: "var(--chart-hover)" }}
           />
-          <Bar dataKey="value" fill="#39ff14" radius={[0, 12, 12, 0]} />
+          <Bar dataKey="value" fill="#10b981" radius={[0, 12, 12, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -81,6 +85,6 @@ export function BreakdownChart({ data }: { data: BreakdownItem[] }) {
 
 const labelMap: Record<string, string> = {
   income: "Entradas",
-  expense: "Saidas",
+  expense: "Saídas",
   balance: "Saldo",
 };

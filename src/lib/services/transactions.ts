@@ -6,6 +6,8 @@ import { addMonthsToDateInput, getCompetencyMonth } from "@/lib/dates";
 import { parseCurrencyToCents, splitIntoEqualInstallments } from "@/lib/money";
 
 export type CreateTransactionInput = {
+  organizationId: string;
+  createdByUserId: string;
   description: string;
   type: "income" | "expense";
   amount: string;
@@ -33,6 +35,8 @@ export async function createTransactionRecord(values: CreateTransactionInput) {
     const [group] = await tx
       .insert(transactionGroups)
       .values({
+        organizationId: values.organizationId,
+        createdByUserId: values.createdByUserId,
         description: values.description,
         type: values.type,
         totalAmountCents,
@@ -47,6 +51,8 @@ export async function createTransactionRecord(values: CreateTransactionInput) {
 
     const rows = buildInstallmentRows({
       groupId: group.id,
+      organizationId: values.organizationId,
+      createdByUserId: values.createdByUserId,
       accountId: values.accountId,
       categoryId: values.categoryId,
       description: values.description,
@@ -64,6 +70,8 @@ export async function createTransactionRecord(values: CreateTransactionInput) {
 
 function buildInstallmentRows(input: {
   groupId: number;
+  organizationId: string;
+  createdByUserId: string;
   accountId: number;
   categoryId: number;
   description: string;
@@ -78,6 +86,8 @@ function buildInstallmentRows(input: {
     const transactionDate = addMonthsToDateInput(input.firstDate, index);
 
     return {
+      organizationId: input.organizationId,
+      createdByUserId: input.createdByUserId,
       groupId: input.groupId,
       accountId: input.accountId,
       categoryId: input.categoryId,

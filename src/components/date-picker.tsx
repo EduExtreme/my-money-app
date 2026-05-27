@@ -38,11 +38,11 @@ export function DatePicker({ value, onValueChange, placeholder = "Selecione a da
             className,
           )}
         >
-          <CalendarIcon className="size-4 text-[#39ff14]" />
+          <CalendarIcon className="size-4 text-primary" />
           {value ? formatDateInput(value) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-auto overflow-hidden rounded-2xl border-[#39ff14]/20 bg-[#07100a] p-0 text-[#eefbf1] shadow-2xl shadow-black/60">
+      <PopoverContent align="start" className="w-auto overflow-hidden rounded-2xl border-primary/20 bg-[#07100a] p-0 text-[#eefbf1] shadow-2xl shadow-black/60">
         <Calendar
           mode="single"
           selected={selectedDate}
@@ -66,7 +66,7 @@ export function DatePicker({ value, onValueChange, placeholder = "Selecione a da
 export function MonthPicker({
   value,
   onValueChange,
-  placeholder = "Selecione o mes",
+  placeholder = "Selecione o mês",
   disabled,
   className,
   clearable = false,
@@ -92,17 +92,17 @@ export function MonthPicker({
             className,
           )}
         >
-          <CalendarIcon className="size-4 text-[#39ff14]" />
+          <CalendarIcon className="size-4 text-primary" />
           {value ? formatMonthInput(value) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-72 overflow-hidden rounded-2xl border-[#39ff14]/20 bg-[#07100a] p-3 text-[#eefbf1] shadow-2xl shadow-black/60">
+      <PopoverContent align="start" className="w-72 overflow-hidden rounded-2xl border-primary/20 bg-[#07100a] p-3 text-[#eefbf1] shadow-2xl shadow-black/60">
         <div className="mb-3 flex items-center justify-between gap-2">
           <Button
             type="button"
             variant="ghost"
             size="icon-sm"
-            className="text-[#c8d5cc] hover:bg-[#39ff14]/10 hover:text-[#39ff14]"
+            className="text-[#c8d5cc] hover:bg-primary/10 hover:text-primary"
             onClick={() => setVisibleYear((year) => year - 1)}
           >
             <ChevronLeft className="size-4" />
@@ -112,7 +112,7 @@ export function MonthPicker({
             type="button"
             variant="ghost"
             size="icon-sm"
-            className="text-[#c8d5cc] hover:bg-[#39ff14]/10 hover:text-[#39ff14]"
+            className="text-[#c8d5cc] hover:bg-primary/10 hover:text-primary"
             onClick={() => setVisibleYear((year) => year + 1)}
           >
             <ChevronRight className="size-4" />
@@ -131,8 +131,8 @@ export function MonthPicker({
                 className={cn(
                   "h-10 rounded-xl text-sm capitalize",
                   isSelected
-                    ? "bg-[#39ff14] text-[#041006] hover:bg-[#7cff65]"
-                    : "text-[#c8d5cc] hover:bg-[#39ff14]/10 hover:text-[#39ff14]",
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "text-[#c8d5cc] hover:bg-primary/10 hover:text-primary",
                 )}
                 onClick={() => {
                   onValueChange(format(monthDate, "yyyy-MM"));
@@ -154,7 +154,7 @@ export function MonthPicker({
             }}
           >
             <X className="size-4" />
-            Limpar mes
+            Limpar mês
           </button>
         ) : null}
       </PopoverContent>

@@ -1,5 +1,6 @@
 import type { Account, Category, Salary, Transaction } from "@/db/schema";
 
+
 import { addMonthsToDateInput, getCompetencyMonth, getCurrentDateInput } from "./dates";
 
 const today = getCurrentDateInput();
@@ -8,10 +9,12 @@ const currentMonth = getCompetencyMonth(today);
 export const demoAccounts: Account[] = [
   {
     id: 1,
-    name: "Cartao Neon",
+    organizationId: null,
+    createdByUserId: null,
+    name: "Cartão Neon",
     type: "credit_card",
     institution: "Banco Principal",
-    color: "#39ff14",
+    color: "#10b981",
     creditLimitCents: 500000,
     closingDay: 25,
     dueDay: 5,
@@ -19,6 +22,8 @@ export const demoAccounts: Account[] = [
   },
   {
     id: 2,
+    organizationId: null,
+    createdByUserId: null,
     name: "Pix Principal",
     type: "pix",
     institution: "Conta Corrente",
@@ -30,7 +35,9 @@ export const demoAccounts: Account[] = [
   },
   {
     id: 3,
-    name: "Debito",
+    organizationId: null,
+    createdByUserId: null,
+    name: "Débito",
     type: "debit_card",
     institution: "Conta Corrente",
     color: "#a855f7",
@@ -42,16 +49,16 @@ export const demoAccounts: Account[] = [
 ];
 
 export const demoCategories: Category[] = [
-  { id: 1, name: "Salario", type: "income", color: "#39ff14", createdAt: new Date() },
-  { id: 2, name: "Freelance", type: "income", color: "#22c55e", createdAt: new Date() },
-  { id: 3, name: "Mercado", type: "expense", color: "#ff3b30", createdAt: new Date() },
-  { id: 4, name: "Transporte", type: "expense", color: "#fb7185", createdAt: new Date() },
-  { id: 5, name: "Moradia", type: "expense", color: "#f97316", createdAt: new Date() },
-  { id: 6, name: "Eletronicos", type: "expense", color: "#ef4444", createdAt: new Date() },
+  { id: 1, organizationId: null, createdByUserId: null, name: "Salário", type: "income", color: "#10b981", createdAt: new Date() },
+  { id: 2, organizationId: null, createdByUserId: null, name: "Freelance", type: "income", color: "#22c55e", createdAt: new Date() },
+  { id: 3, organizationId: null, createdByUserId: null, name: "Mercado", type: "expense", color: "#ff3b30", createdAt: new Date() },
+  { id: 4, organizationId: null, createdByUserId: null, name: "Transporte", type: "expense", color: "#fb7185", createdAt: new Date() },
+  { id: 5, organizationId: null, createdByUserId: null, name: "Moradia", type: "expense", color: "#f97316", createdAt: new Date() },
+  { id: 6, organizationId: null, createdByUserId: null, name: "Eletrônicos", type: "expense", color: "#ef4444", createdAt: new Date() },
 ];
 
 export const demoTransactions: Transaction[] = [
-  createDemoTransaction(1, 1, 2, 1, "Salario mensal", "income", 850000, today, 1, 1, "paid"),
+  createDemoTransaction(1, 1, 2, 1, "Salário mensal", "income", 850000, today, 1, 1, "paid"),
   createDemoTransaction(2, 2, 1, 3, "Notebook", "expense", 33333, today, 1, 6, "planned"),
   createDemoTransaction(3, 2, 1, 3, "Notebook", "expense", 33333, addMonthsToDateInput(today, 1), 2, 6, "planned"),
   createDemoTransaction(4, 2, 1, 3, "Notebook", "expense", 33333, addMonthsToDateInput(today, 2), 3, 6, "planned"),
@@ -65,7 +72,9 @@ export const demoTransactions: Transaction[] = [
 export const demoSalaries: Salary[] = [
   {
     id: 1,
-    name: "Salario principal",
+    organizationId: null,
+    createdByUserId: null,
+    name: "Salário principal",
     amountCents: 620000,
     paymentDay: 5,
     startMonth: currentMonth,
@@ -93,6 +102,8 @@ function createDemoTransaction(
 ): Transaction {
   return {
     id,
+    organizationId: null,
+    createdByUserId: null,
     groupId,
     accountId,
     categoryId,

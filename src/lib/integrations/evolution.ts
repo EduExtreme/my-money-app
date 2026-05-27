@@ -14,7 +14,7 @@ export async function sendEvolutionTextMessage(input: { number: string; text: st
   const instanceName = process.env.EVOLUTION_INSTANCE_NAME;
 
   if (!apiUrl || !apiKey || !instanceName) {
-    return { sent: false, reason: "Evolution API nao configurada." } as const;
+    return { sent: false, reason: "Evolution API não configurada." } as const;
   }
 
   const response = await fetch(`${apiUrl}/message/sendText/${instanceName}`, {

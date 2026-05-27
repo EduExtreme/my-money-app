@@ -25,14 +25,14 @@ export function CategoriesPageClient({ initialData }: { initialData: FinanceData
                 <article key={category.id} className="rounded-3xl border border-white/10 bg-white/[0.035] p-4">
                   <span className="mb-4 block size-3 rounded-full" style={{ background: category.color }} />
                   <h3 className="text-lg font-semibold text-white">{category.name}</h3>
-                  <p className={category.type === "expense" ? "text-sm text-[#ff7a7a]" : "text-sm text-[#39ff14]"}>
+                  <p className={category.type === "expense" ? "text-sm text-[#ff7a7a]" : "text-sm text-primary"}>
                     {getTransactionTypeLabel(category.type)}
                   </p>
                 </article>
               ))}
             </div>
           ) : (
-            <EmptyState title="Nenhuma categoria" description="Crie categorias para separar receitas, custos fixos, cartao, lazer e investimentos." />
+            <EmptyState title="Nenhuma categoria" description="Crie categorias para separar receitas, custos fixos, cartão, lazer e investimentos." />
           )}
         </section>
 

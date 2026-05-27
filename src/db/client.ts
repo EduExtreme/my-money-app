@@ -16,16 +16,20 @@ export const isDatabaseConfigured = Boolean(databaseUrl);
 
 export function getDb() {
   if (!databaseUrl) {
-    throw new Error("DATABASE_URL nao configurada. Crie .env.local com a URL do NeonDB.");
+    throw new Error("DATABASE_URL não configurada. Crie .env.local com a URL do NeonDB.");
   }
 
   const sql = neon(databaseUrl);
   return drizzleHttp(sql, { schema });
 }
 
+export function getAuthDb() {
+  return getDb();
+}
+
 export function getTransactionDb() {
   if (!databaseUrl) {
-    throw new Error("DATABASE_URL nao configurada. Crie .env.local com a URL do NeonDB.");
+    throw new Error("DATABASE_URL não configurada. Crie .env.local com a URL do NeonDB.");
   }
 
   transactionPool ??= new Pool({ connectionString: databaseUrl });

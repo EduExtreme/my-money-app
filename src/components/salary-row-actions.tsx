@@ -39,17 +39,31 @@ export function CreateSalaryForm({
   categories,
   disabled,
   selectedMonth,
+  members,
 }: {
   accounts: Option[];
   categories: Option[];
   disabled: boolean;
   selectedMonth: string;
+  members: { name: string | null }[];
 }) {
+
+
+
+
+
+
+
+
+
+
+
+
   const queryClient = useQueryClient();
   const form = useForm<SalaryFormValues>({
     resolver: zodResolver(salaryFormSchema),
     defaultValues: {
-      name: "",
+      name: members.find((m) => m.name)?.name || "",
       amount: "",
       paymentDay: 5,
       startMonth: selectedMonth,
@@ -63,21 +77,31 @@ export function CreateSalaryForm({
   const mutation = useMutation({
     mutationFn: (values: SalaryFormValues) => createSalary(objectToFormData(values)),
     onSuccess: async () => {
-      form.reset();
+      form.reset({
+        name: members.find((m) => m.name)?.name || "",
+        amount: "",
+        paymentDay: 5,
+        startMonth: selectedMonth,
+        endMonth: "",
+        accountId: accounts[0]?.id ? String(accounts[0].id) : "",
+        categoryId: categories[0]?.id ? String(categories[0].id) : "",
+        status: "active",
+        notes: "",
+      });
       await invalidateFinanceQueries(queryClient);
     },
   });
 
   return (
     <form className="mt-5 grid gap-4" onSubmit={form.handleSubmit((values) => mutation.mutate(values))}>
-      <SalaryFields accounts={accounts} categories={categories} disabled={disabled || mutation.isPending} form={form} />
+      <SalaryFields accounts={accounts} categories={categories} disabled={disabled || mutation.isPending} form={form} members={members} />
       {mutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{mutation.error.message}</p> : null}
       <AppButton
-        className="inline-flex items-center justify-center rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40"
+        className="inline-flex items-center justify-center rounded-2xl bg-[#10b981] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#059669] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40"
         disabled={disabled || mutation.isPending}
         type="submit"
       >
-        Salvar salario
+        Salvar salário
       </AppButton>
     </form>
   );
@@ -88,12 +112,26 @@ export function SalaryRowActions({
   accounts,
   categories,
   disabled,
+  members,
 }: {
   salary: SalaryActionData;
   accounts: Option[];
   categories: Option[];
   disabled: boolean;
+  members: { name: string | null }[];
 }) {
+
+
+
+
+
+
+
+
+
+
+
+
   const queryClient = useQueryClient();
   // The shadcn dialog is controlled so server mutation success can close it programmatically.
   const [open, setOpen] = useState(false);
@@ -144,16 +182,16 @@ export function SalaryRowActions({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
           aria-label={`Editar ${salary.name}`}
-          className="grid size-9 place-items-center rounded-xl border border-[#39ff14]/25 bg-[#39ff14]/10 text-[#39ff14] transition hover:bg-[#39ff14]/20"
+          className="grid size-9 place-items-center rounded-xl border border-[#10b981]/25 bg-[#10b981]/10 text-[#10b981] transition hover:bg-[#10b981]/20"
         >
           <Pencil className="size-4" />
         </DialogTrigger>
         <DialogContent showCloseButton={false} className="glass-panel max-h-[calc(100vh-2rem)] w-full max-w-3xl overflow-y-auto rounded-[1.7rem] p-5 text-left text-[#eefbf1] sm:max-w-3xl">
                 <div className="mb-4 flex items-start justify-between gap-4">
                   <div>
-                    <DialogTitle className="text-2xl font-semibold text-white">Editar salario</DialogTitle>
+                    <DialogTitle className="text-2xl font-semibold text-white">Editar salário</DialogTitle>
                     <DialogDescription className="mt-2 text-sm text-[#96a59b]">
-                      Salarios ativos entram automaticamente nas entradas de todos os meses dentro do periodo definido.
+                      Salários ativos entram automaticamente nas entradas de todos os meses dentro do período definido.
                     </DialogDescription>
                   </div>
                   <DialogClose
@@ -166,14 +204,14 @@ export function SalaryRowActions({
                 </div>
 
                 <form className="grid gap-4" onSubmit={form.handleSubmit((values) => updateMutation.mutate(values))}>
-                  <SalaryFields accounts={accounts} categories={categories} disabled={updateMutation.isPending} form={form} />
+                  <SalaryFields accounts={accounts} categories={categories} disabled={updateMutation.isPending} form={form} members={members} />
                   {updateMutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{updateMutation.error.message}</p> : null}
                   <div className="mt-2 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                     <DialogClose className="rounded-2xl border border-white/10 px-5 py-3 text-sm font-bold text-white transition hover:bg-white/10" type="button">
                       Cancelar
                     </DialogClose>
-                    <AppButton className="rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={updateMutation.isPending} type="submit">
-                      Salvar salario
+                    <AppButton className="rounded-2xl bg-[#10b981] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#059669] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={updateMutation.isPending} type="submit">
+                      Salvar salário
                     </AppButton>
                   </div>
                 </form>
@@ -186,7 +224,7 @@ export function SalaryRowActions({
         disabled={deleteMutation.isPending}
         type="button"
         onClick={() => {
-          if (window.confirm("Excluir este salario mensal dos calculos?")) {
+          if (window.confirm("Excluir este salário mensal dos cálculos?")) {
             deleteMutation.mutate();
           }
         }}
@@ -202,34 +240,70 @@ function SalaryFields<T extends SalaryFormValues | UpdateSalaryFormValues>({
   accounts,
   categories,
   disabled,
+  members = [],
 }: {
   form: import("react-hook-form").UseFormReturn<T>;
   accounts: Option[];
   categories: Option[];
   disabled: boolean;
+  members?: { name: string | null }[];
 }) {
+
+
+
+
+
+
+
+
+
+
+
+
   const accountOptions = toOptions(accounts, (account) => account.name);
+  const memberOptions = (members || [])
+    .filter((m) => m.name)
+    .map((m) => ({ value: m.name as string, label: m.name as string }));
   const categoryOptions = toOptions(categories, (category) => category.name);
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2">
-        <FormInput form={form} name={"name" as import("react-hook-form").FieldPath<T>} label="Nome" placeholder="Salario principal" disabled={disabled} />
+      <div className="grid gap-4">
+        {memberOptions.length > 0 ? (
+          <FormSelect
+            form={form}
+            name={"name" as import("react-hook-form").FieldPath<T>}
+            label="Membro da Família"
+            options={memberOptions}
+            disabled={disabled}
+          />
+        ) : (
+          <FormInput
+            form={form}
+            name={"name" as import("react-hook-form").FieldPath<T>}
+            label="Nome"
+            placeholder="Salário principal"
+            disabled={disabled}
+          />
+        )}
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
         <FormInput form={form} name={"amount" as import("react-hook-form").FieldPath<T>} label="Valor mensal" inputMode="decimal" placeholder="6200,00" disabled={disabled} />
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
         <FormInput form={form} name={"paymentDay" as import("react-hook-form").FieldPath<T>} label="Dia de pagamento" type="number" min={1} max={31} disabled={disabled} />
-        <FormMonthPicker form={form} name={"startMonth" as import("react-hook-form").FieldPath<T>} label="Mes inicial" disabled={disabled} />
-        <FormMonthPicker form={form} name={"endMonth" as import("react-hook-form").FieldPath<T>} label="Mes final" disabled={disabled} clearable />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormMonthPicker form={form} name={"startMonth" as import("react-hook-form").FieldPath<T>} label="Mês inicial" disabled={disabled} />
+        <FormMonthPicker form={form} name={"endMonth" as import("react-hook-form").FieldPath<T>} label="Mês final" disabled={disabled} clearable />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
         <FormSelect form={form} name={"accountId" as import("react-hook-form").FieldPath<T>} label="Conta de recebimento" options={accountOptions} disabled={disabled} />
         <FormSelect form={form} name={"categoryId" as import("react-hook-form").FieldPath<T>} label="Categoria" options={categoryOptions} disabled={disabled} />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         <FormSelect
           form={form}
           name={"status" as import("react-hook-form").FieldPath<T>}
@@ -237,7 +311,7 @@ function SalaryFields<T extends SalaryFormValues | UpdateSalaryFormValues>({
           options={salaryStatuses.map((status) => ({ value: status.value, label: getSalaryStatusLabel(status.value) }))}
           disabled={disabled}
         />
-        <FormInput form={form} name={"notes" as import("react-hook-form").FieldPath<T>} label="Observacoes" placeholder="Opcional" disabled={disabled} />
+        <FormInput form={form} name={"notes" as import("react-hook-form").FieldPath<T>} label="Observações" placeholder="Opcional" disabled={disabled} />
       </div>
     </>
   );

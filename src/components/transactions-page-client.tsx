@@ -45,14 +45,14 @@ export function TransactionsPageClient({
   return (
     <div>
       <DatabaseBanner message={data.databaseMessage} mode={data.mode} />
-      <SectionHeader eyebrow="ledger" title="Transacoes">
-        <NewTransactionDialog className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#39ff14] px-4 py-2.5 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65]" />
+      <SectionHeader eyebrow="ledger" title="Transações">
+        <NewTransactionDialog className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#10b981] px-4 py-2.5 text-sm font-bold text-[#041006] transition hover:bg-[#059669]" />
       </SectionHeader>
 
       <section className="mb-6 grid gap-4 md:grid-cols-3">
-        <MetricCard title="Entradas" value={data.metrics.monthlyIncome} caption={`Salarios + transacoes em ${getMonthLabel(selectedMonth)}`} />
-        <MetricCard title="Saidas" value={data.metrics.monthlyExpense} tone="red" caption="Total do filtro mensal" />
-        <MetricCard title="Saldo" value={data.metrics.monthlyBalance} tone={data.metrics.monthlyBalance >= 0 ? "green" : "red"} caption="Resultado do mes" />
+        <MetricCard title="Entradas" value={data.metrics.monthlyIncome} caption={`Salários + transações em ${getMonthLabel(selectedMonth)}`} />
+        <MetricCard title="Saídas" value={data.metrics.monthlyExpense} tone="red" caption="Total do filtro mensal" />
+        <MetricCard title="Saldo" value={data.metrics.monthlyBalance} tone={data.metrics.monthlyBalance >= 0 ? "green" : "red"} caption="Resultado do mês" />
       </section>
 
       <section className="glass-panel rounded-[1.7rem] p-5">

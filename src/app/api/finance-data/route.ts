@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { getFinanceData } from "@/lib/data";
+import { getCurrentFamily } from "@/lib/auth-session";
 import { serializeForClient } from "@/lib/finance-serialization";
 
 const financeQuerySchema = z.object({
@@ -16,10 +17,16 @@ export async function GET(request: Request) {
   });
 
   if (!parsed.success) {
-    return Response.json({ error: "Filtros invalidos." }, { status: 400 });
+    return Response.json({ error: "Filtros inválidos." }, { status: 400 });
   }
 
-  const data = await getFinanceData(parsed.data.month, parsed.data.year);
+  const family = await getCurrentFamily();
+
+  if (!family) {
+    return Response.json({ error: "Não autenticado." }, { status: 401 });
+  }
+
+  const data = await getFinanceData(parsed.data.month, parsed.data.year, family.organizationId);
 
   return Response.json(serializeForClient(data));
 }

@@ -19,7 +19,7 @@ export function CategoryForm({ disabled }: { disabled: boolean }) {
     defaultValues: {
       name: "",
       type: "expense",
-      color: "#39ff14",
+      color: "#10b981",
     },
   });
   const mutation = useMutation({
@@ -43,7 +43,7 @@ export function CategoryForm({ disabled }: { disabled: boolean }) {
       />
       <FormInput form={form} name="color" label="Cor" type="color" disabled={isDisabled} />
       {mutation.error ? <p className="rounded-2xl border border-[#ff3131]/30 bg-[#ff3131]/10 p-3 text-sm text-[#ffd6d6]">{mutation.error.message}</p> : null}
-      <AppButton className="inline-flex items-center justify-center rounded-2xl bg-[#39ff14] px-5 py-3 text-sm font-bold text-[#041006] transition hover:bg-[#7cff65] disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={isDisabled} type="submit">
+      <AppButton className="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 text-sm font-bold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-white/15 disabled:text-white/40" disabled={isDisabled} type="submit">
         Salvar categoria
       </AppButton>
     </form>
